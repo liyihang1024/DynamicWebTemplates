@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<!-- saved from url=(0024)https://sfo1.jfjf233.me/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<title>3D元素周期表</title>
+
+		<script>
+			function fangdajing() {
+				var sc = document.creatElement('style');
+				sc.innerHTML="
+				
+				"
+			}
+		</script>
+		<script src="./3D元素周期表_files/three.min.js.下载"></script>
+		<script src="./3D元素周期表_files/tween.min.js.下载"></script>
+		<script src="./3D元素周期表_files/TrackballControls.js.下载"></script>
+		<script src="./3D元素周期表_files/CSS3DRenderer.js.下载"></script>
+
+		<style>
+			html,
+			body {
+				height: 100%;
+			}
+
+			body {
+				background-color: #000000;
+				margin: 0;
+				font-family: Helvetica, sans-serif;
+				;
+				overflow: hidden;
+			}
+
+			a {
+				color: #ffffff;
+			}
+
+			#info {
+				position: absolute;
+				width: 100%;
+				color: #ffffff;
+				padding: 5px;
+				font-family: Monospace;
+				font-size: 13px;
+				font-weight: bold;
+				text-align: center;
+				z-index: 1;
+			}
+
+			#menu {
+				position: absolute;
+				bottom: 20px;
+				width: 100%;
+				text-align: center;
+				font-family: verdana, Tahoma, Arial, Hei, "Microsoft Yahei", SimHei;
+			}
+
+			.element {
+				width: 120px;
+				height: 160px;
+				box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+				border: 1px solid rgba(127, 255, 255, 0.25);
+				text-align: center;
+				cursor: default;
+			}
+
+
+			.element .number {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				font-size: 12px;
+				color: rgba(127, 255, 255, 0.75);
+			}
+
+			.element .symbol {
+				position: absolute;
+				top: 40px;
+				left: 0px;
+				right: 0px;
+				font-size: 60px;
+				font-weight: bold;
+				color: rgba(255, 255, 255, 0.75);
+				text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+			}
+
+			.element .details {
+				position: absolute;
+				bottom: 15px;
+				left: 0px;
+				right: 0px;
+				font-size: 12px;
+				color: rgba(127, 255, 255, 0.75);
+			}
+
+			button {
+				color: rgba(127, 255, 255, 0.75);
+				background: transparent;
+				outline: 1px solid rgba(127, 255, 255, 0.75);
+				border: 0px;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: rgba(0, 255, 255, 0.5);
+			}
+
+			button:active {
+				color: #000000;
+				background-color: rgba(0, 255, 255, 0.75);
+			}
+		</style>
+	<input type="hidden" id="_w_simile" data-inspect-config="3"><script type="text/javascript" src="chrome-extension://odphnbhiddhdpoccbialllejaajemdio/scripts/inspector.js"></script><style type="text/css">@font-face {
+  font-family: "xm-iconfont";
+  src: url('//at.alicdn.com/t/font_792691_ptvyboo0bno.eot?t=1574048839056');
+  /* IE9 */
+  src: url('//at.alicdn.com/t/font_792691_ptvyboo0bno.eot?t=1574048839056#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('data:application/x-font-woff2;charset=utf-8;base64,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') format('woff2'), url('//at.alicdn.com/t/font_792691_ptvyboo0bno.woff?t=1574048839056') format('woff'), url('//at.alicdn.com/t/font_792691_ptvyboo0bno.ttf?t=1574048839056') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */ url('//at.alicdn.com/t/font_792691_ptvyboo0bno.svg?t=1574048839056#iconfont') format('svg');
+  /* iOS 4.1- */
+}
+.xm-iconfont {
+  font-family: "xm-iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.xm-icon-quanxuan:before {
+  content: "\e62c";
+}
+.xm-icon-caidan:before {
+  content: "\e610";
+}
+.xm-icon-fanxuan:before {
+  content: "\e837";
+}
+.xm-icon-pifu:before {
+  content: "\e668";
+}
+.xm-icon-qingkong:before {
+  content: "\e63e";
+}
+.xm-icon-sousuo:before {
+  content: "\e600";
+}
+.xm-icon-danx:before {
+  content: "\e62b";
+}
+.xm-icon-duox:before {
+  content: "\e613";
+}
+.xm-icon-close:before {
+  content: "\e601";
+}
+.xm-icon-expand:before {
+  content: "\e641";
+}
+.xm-icon-banxuan:before {
+  content: "\e60d";
+}
+</style><style type="text/css">@-webkit-keyframes xm-upbit {
+  from {
+    -webkit-transform: translate3d(0, 30px, 0);
+    opacity: 0.3;
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes xm-upbit {
+  from {
+    transform: translate3d(0, 30px, 0);
+    opacity: 0.3;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@-webkit-keyframes loader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+xm-select {
+  background-color: #FFF;
+  position: relative;
+  border: 1px solid #E6E6E6;
+  border-radius: 2px;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+xm-select * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+xm-select:hover,
+xm-select:focus {
+  border-color: #C0C4CC;
+}
+xm-select > .xm-tips {
+  color: #999999;
+  padding: 0 10px;
+  position: absolute;
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+xm-select > .xm-icon {
+  display: inline-block;
+  overflow: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: 10px;
+  top: 50%;
+  margin-top: -3px;
+  cursor: pointer;
+  border: 6px dashed transparent;
+  border-top-color: #C2C2C2;
+  border-top-style: solid;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+xm-select > .xm-icon-expand {
+  margin-top: -9px;
+  transform: rotate(180deg);
+}
+xm-select > .xm-label.single-row {
+  position: absolute;
+  top: 0;
+  bottom: 0px;
+  left: 0px;
+  right: 30px;
+  overflow: auto hidden;
+}
+xm-select > .xm-label.single-row .scroll {
+  overflow-y: hidden;
+}
+xm-select > .xm-label.single-row .label-content {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+xm-select > .xm-label.auto-row .label-content {
+  flex-wrap: wrap;
+  padding-right: 30px !important;
+}
+xm-select > .xm-label.auto-row .xm-label-block > span {
+  white-space: unset;
+  height: 100%;
+}
+xm-select > .xm-label .scroll .label-content {
+  display: flex;
+  padding: 3px 10px;
+}
+xm-select > .xm-label .xm-label-block {
+  display: flex;
+  position: relative;
+  padding: 0px 5px;
+  margin: 2px 5px 2px 0;
+  border-radius: 3px;
+  align-items: baseline;
+  color: #FFF;
+}
+xm-select > .xm-label .xm-label-block > span {
+  display: flex;
+  color: #FFF;
+  white-space: nowrap;
+}
+xm-select > .xm-label .xm-label-block > i {
+  color: #FFF;
+  margin-left: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+}
+xm-select > .xm-label .xm-label-block.disabled {
+  background-color: #C2C2C2 !important;
+  cursor: no-drop !important;
+}
+xm-select > .xm-label .xm-label-block.disabled > i {
+  cursor: no-drop !important;
+}
+xm-select > .xm-body {
+  position: absolute;
+  left: 0;
+  top: 42px;
+  padding: 5px 0;
+  z-index: 999;
+  width: 100%;
+  min-width: fit-content;
+  border: 1px solid #E6E6E6;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  animation-name: xm-upbit;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+xm-select > .xm-body .scroll-body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+xm-select > .xm-body .scroll-body::-webkit-scrollbar {
+  width: 8px;
+}
+xm-select > .xm-body .scroll-body::-webkit-scrollbar-track {
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  -ms-border-radius: 2em;
+  border-radius: 2em;
+  background-color: #FFF;
+}
+xm-select > .xm-body .scroll-body::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  -ms-border-radius: 2em;
+  border-radius: 2em;
+  background-color: #C2C2C2;
+}
+xm-select > .xm-body.up {
+  top: auto;
+  bottom: 42px;
+}
+xm-select > .xm-body.relative {
+  position: relative;
+  display: block !important;
+  top: 0;
+  box-shadow: none;
+  border: none;
+  animation-name: none;
+  animation-duration: 0;
+  min-width: 100%;
+}
+xm-select > .xm-body .xm-group {
+  cursor: default;
+}
+xm-select > .xm-body .xm-group-item {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 10px;
+  color: #999;
+  font-size: 12px;
+}
+xm-select > .xm-body .xm-option {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0 10px;
+  cursor: pointer;
+}
+xm-select > .xm-body .xm-option-icon {
+  color: transparent;
+  display: flex;
+  border: 1px solid #E6E6E6;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+}
+xm-select > .xm-body .xm-option-icon.xm-custom-icon {
+  color: unset;
+  border: unset;
+}
+xm-select > .xm-body .xm-option-icon-hidden {
+  margin-right: -10px;
+}
+xm-select > .xm-body .xm-option-icon.xm-icon-danx {
+  border-radius: 100%;
+}
+xm-select > .xm-body .xm-option-content {
+  display: flex;
+  position: relative;
+  padding-left: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  ;
+  width: calc(100% - 20px);
+}
+xm-select > .xm-body .xm-option.hide-icon .xm-option-content {
+  padding-left: 0;
+}
+xm-select > .xm-body .xm-option.selected.hide-icon .xm-option-content {
+  color: #FFF !important;
+}
+xm-select > .xm-body .xm-option .loader {
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 6px;
+  color: #C2C2C2;
+}
+xm-select > .xm-body .xm-select-empty {
+  text-align: center;
+  color: #999;
+}
+xm-select > .xm-body .disabled {
+  cursor: no-drop;
+}
+xm-select > .xm-body .disabled:hover {
+  background-color: #FFF;
+}
+xm-select > .xm-body .disabled .xm-option-icon {
+  border-color: #C2C2C2 !important;
+}
+xm-select > .xm-body .disabled .xm-option-content {
+  color: #C2C2C2 !important;
+}
+xm-select > .xm-body .disabled.selected > .xm-option-icon {
+  color: #C2C2C2 !important;
+}
+xm-select > .xm-body .xm-search {
+  background-color: #FFF !important;
+  position: relative;
+  padding: 0 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+xm-select > .xm-body .xm-search > i {
+  position: absolute;
+  color: ;
+}
+xm-select > .xm-body .xm-search-input {
+  border: none;
+  border-bottom: 1px solid #E6E6E6;
+  padding-left: 27px;
+  cursor: text;
+}
+xm-select > .xm-body .xm-paging {
+  padding: 0 10px;
+  display: flex;
+  margin-top: 5px;
+}
+xm-select > .xm-body .xm-paging > span:first-child {
+  border-radius: 2px 0 0 2px;
+}
+xm-select > .xm-body .xm-paging > span:last-child {
+  border-radius: 0 2px 2px 0;
+}
+xm-select > .xm-body .xm-paging > span {
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  vertical-align: middle;
+  margin: 0 -1px 0 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 12px;
+  border: 1px solid #e2e2e2;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow: hidden;
+  min-width: 50px;
+}
+xm-select > .xm-body .xm-toolbar {
+  padding: 0 10px;
+  display: flex;
+  margin: -3px 0;
+  cursor: default;
+}
+xm-select > .xm-body .xm-toolbar .toolbar-tag {
+  cursor: pointer;
+  display: flex;
+  margin-right: 20px;
+  color: ;
+  align-items: baseline;
+}
+xm-select > .xm-body .xm-toolbar .toolbar-tag:hover {
+  opacity: 0.8;
+}
+xm-select > .xm-body .xm-toolbar .toolbar-tag:active {
+  opacity: 1;
+}
+xm-select > .xm-body .xm-toolbar .toolbar-tag > i {
+  margin-right: 2px;
+  font-size: 14px;
+}
+xm-select > .xm-body .xm-toolbar .toolbar-tag:last-child {
+  margin-right: 0;
+}
+xm-select > .xm-body .xm-body-custom {
+  line-height: initial;
+  cursor: default;
+}
+xm-select > .xm-body .xm-body-custom * {
+  box-sizing: initial;
+}
+xm-select > .xm-body .xm-tree {
+  position: relative;
+}
+xm-select > .xm-body .xm-tree-icon {
+  display: inline-block;
+  margin-right: 3px;
+  cursor: pointer;
+  border: 6px dashed transparent;
+  border-left-color: #C2C2C2;
+  border-left-style: solid;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  z-index: 2;
+  visibility: hidden;
+}
+xm-select > .xm-body .xm-tree-icon.expand {
+  margin-top: 3px;
+  margin-right: 5px;
+  margin-left: -2px;
+  transform: rotate(90deg);
+}
+xm-select > .xm-body .xm-tree-icon.xm-visible {
+  visibility: visible;
+}
+xm-select > .xm-body .xm-tree .left-line {
+  position: absolute;
+  left: 13px;
+  width: 0;
+  z-index: 1;
+  border-left: 1px dotted #c0c4cc !important;
+}
+xm-select > .xm-body .xm-tree .top-line {
+  position: absolute;
+  left: 13px;
+  height: 0;
+  z-index: 1;
+  border-top: 1px dotted #c0c4cc !important;
+}
+xm-select > .xm-body .xm-tree .xm-tree-icon + .top-line {
+  margin-left: 1px;
+}
+xm-select > .xm-body .scroll-body > .xm-tree > .xm-option > .top-line,
+xm-select > .xm-body .scroll-body > .xm-option > .top-line {
+  width: 0 !important;
+}
+xm-select > .xm-body .xm-cascader-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 5px 0;
+  border: 1px solid #E6E6E6;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  margin: -1px;
+}
+xm-select > .xm-body .xm-cascader-box::before {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-right-color: #E6E6E6;
+  top: 10px;
+  left: -12px;
+}
+xm-select > .xm-body .xm-cascader-box::after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-right-color: #fff;
+  top: 10px;
+  left: -11px;
+}
+xm-select > .xm-body .xm-cascader-scroll {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+xm-select > .xm-body.cascader {
+  width: unset;
+  min-width: unset;
+}
+xm-select > .xm-body.cascader .xm-option-content {
+  padding-left: 8px;
+}
+xm-select > .xm-body.cascader .disabled .xm-right-arrow {
+  color: #C2C2C2 !important;
+}
+xm-select > .xm-body.cascader .hide-icon.disabled .xm-right-arrow {
+  color: #999 !important;
+}
+xm-select .xm-input {
+  cursor: pointer;
+  border-radius: 2px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #E6E6E6;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #FFF;
+  line-height: 1.3;
+  padding-left: 10px;
+  outline: 0;
+  user-select: text;
+  -ms-user-select: text;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+}
+xm-select .dis {
+  display: none;
+}
+xm-select .loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+xm-select .loader {
+  border: 0.2em dotted currentcolor;
+  border-radius: 50%;
+  -webkit-animation: 1s loader linear infinite;
+  animation: 1s loader linear infinite;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  color: inherit;
+  vertical-align: middle;
+  pointer-events: none;
+}
+xm-select .xm-select-default {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: none;
+  visibility: hidden;
+}
+xm-select .xm-select-disabled {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: no-drop;
+  z-index: 2;
+  opacity: 0.3;
+  background-color: #FFF;
+}
+xm-select .item--divided {
+  border-top: 1px solid #ebeef5;
+  width: calc(100% - 20px);
+  cursor: initial;
+}
+xm-select .xm-right-arrow {
+  position: absolute;
+  color: ;
+  right: 5px;
+  top: -1px;
+  font-weight: 700;
+  transform: scale(0.6, 1);
+}
+xm-select .xm-right-arrow::after {
+  content: '>';
+}
+xm-select[size='large'] {
+  min-height: 40px;
+  line-height: 40px;
+}
+xm-select[size='large'] .xm-input {
+  height: 40px;
+}
+xm-select[size='large'] .xm-label .scroll .label-content {
+  line-height: 34px;
+}
+xm-select[size='large'] .xm-label .xm-label-block {
+  height: 30px;
+  line-height: 30px;
+}
+xm-select[size='large'] .xm-body .xm-option .xm-option-icon {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+}
+xm-select[size='large'] .xm-paging > span {
+  height: 34px;
+  line-height: 34px;
+}
+xm-select[size='large'] .xm-tree .left-line {
+  height: 100%;
+  bottom: 20px;
+}
+xm-select[size='large'] .xm-tree .left-line-group {
+  height: calc(100% - 40px);
+}
+xm-select[size='large'] .xm-tree .xm-tree-icon.xm-hidden + .top-line {
+  top: 19px;
+}
+xm-select[size='large'] .item--divided {
+  margin: 10px;
+}
+xm-select {
+  min-height: 36px;
+  line-height: 36px;
+}
+xm-select .xm-input {
+  height: 36px;
+}
+xm-select .xm-label .scroll .label-content {
+  line-height: 30px;
+}
+xm-select .xm-label .xm-label-block {
+  height: 26px;
+  line-height: 26px;
+}
+xm-select .xm-body .xm-option .xm-option-icon {
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+}
+xm-select .xm-paging > span {
+  height: 30px;
+  line-height: 30px;
+}
+xm-select .xm-tree .left-line {
+  height: 100%;
+  bottom: 18px;
+}
+xm-select .xm-tree .left-line-group {
+  height: calc(100% - 36px);
+}
+xm-select .xm-tree .xm-tree-icon.xm-hidden + .top-line {
+  top: 17px;
+}
+xm-select .item--divided {
+  margin: 9px;
+}
+xm-select[size='small'] {
+  min-height: 32px;
+  line-height: 32px;
+}
+xm-select[size='small'] .xm-input {
+  height: 32px;
+}
+xm-select[size='small'] .xm-label .scroll .label-content {
+  line-height: 26px;
+}
+xm-select[size='small'] .xm-label .xm-label-block {
+  height: 22px;
+  line-height: 22px;
+}
+xm-select[size='small'] .xm-body .xm-option .xm-option-icon {
+  height: 16px;
+  width: 16px;
+  font-size: 16px;
+}
+xm-select[size='small'] .xm-paging > span {
+  height: 26px;
+  line-height: 26px;
+}
+xm-select[size='small'] .xm-tree .left-line {
+  height: 100%;
+  bottom: 16px;
+}
+xm-select[size='small'] .xm-tree .left-line-group {
+  height: calc(100% - 32px);
+}
+xm-select[size='small'] .xm-tree .xm-tree-icon.xm-hidden + .top-line {
+  top: 15px;
+}
+xm-select[size='small'] .item--divided {
+  margin: 8px;
+}
+xm-select[size='mini'] {
+  min-height: 28px;
+  line-height: 28px;
+}
+xm-select[size='mini'] .xm-input {
+  height: 28px;
+}
+xm-select[size='mini'] .xm-label .scroll .label-content {
+  line-height: 22px;
+}
+xm-select[size='mini'] .xm-label .xm-label-block {
+  height: 18px;
+  line-height: 18px;
+}
+xm-select[size='mini'] .xm-body .xm-option .xm-option-icon {
+  height: 14px;
+  width: 14px;
+  font-size: 14px;
+}
+xm-select[size='mini'] .xm-paging > span {
+  height: 22px;
+  line-height: 22px;
+}
+xm-select[size='mini'] .xm-tree .left-line {
+  height: 100%;
+  bottom: 14px;
+}
+xm-select[size='mini'] .xm-tree .left-line-group {
+  height: calc(100% - 28px);
+}
+xm-select[size='mini'] .xm-tree .xm-tree-icon.xm-hidden + .top-line {
+  top: 13px;
+}
+xm-select[size='mini'] .item--divided {
+  margin: 7px;
+}
+.layui-form-pane xm-select {
+  margin: -1px -1px -1px 0;
+}
+</style></head>
+	<body data-new-gr-c-s-check-loaded="14.1045.0" data-gr-ext-installed="">
+		<script src="./3D元素周期表_files/three.min.js.下载"></script>
+		<script src="./3D元素周期表_files/tween.min.js.下载"></script>
+		<script src="./3D元素周期表_files/TrackballControls.js.下载"></script>
+		<script src="./3D元素周期表_files/CSS3DRenderer.js.下载"></script>
+
+		<div id="container"><div style="overflow: hidden; transform-style: preserve-3d; width: 1584px; height: 932px; position: absolute; perspective: 1280.32px;"><div style="transform-style: preserve-3d; width: 1584px; height: 932px; transform: translate3d(0px, 0px, 1280.32px) matrix3d(0.710987, -0.210699, -0.670897, 0, 0.292751, -0.778764, 0.554819, 0, 0.63937, 0.590875, 0.492009, 0, 4870.56, 242.849, -2413.42, 1) translate3d(792px, 466px, 0px);"><div class="element" style="background-color: rgba(0, 127, 127, 0.537); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 800, -2000, 1);"><div class="number">1</div><div class="symbol">H</div><div class="details">飞翔的企鹅<br>1.00794</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.475); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 800, -2000, 1);"><div class="number">2</div><div class="symbol">He</div><div class="details">Helium<br>4.002602</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.58); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 800, -2000, 1);"><div class="number">3</div><div class="symbol">Li</div><div class="details">Lithium<br>#6.941</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.286); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 800, -2000, 1);"><div class="number">4</div><div class="symbol">Be</div><div class="details">Beryllium<br>9.012182</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.49); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 800, -2000, 1);"><div class="number">5</div><div class="symbol">B</div><div class="details">Boron<br>#10.811</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.663); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 400, -2000, 1);"><div class="number">6</div><div class="symbol">C</div><div class="details">Carbon<br>#12.0107</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.486); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 400, -2000, 1);"><div class="number">7</div><div class="symbol">N</div><div class="details">Nitrogen<br>#14.0067</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.737); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 400, -2000, 1);"><div class="number">8</div><div class="symbol">O</div><div class="details">Oxygen<br>#15.9994</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.74); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 400, -2000, 1);"><div class="number">9</div><div class="symbol">F</div><div class="details">Fluorine<br>18.9984032</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.592); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 400, -2000, 1);"><div class="number">10</div><div class="symbol">Ne</div><div class="details">Neon<br>#20.1797</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.537); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 0, -2000, 1);"><div class="number">11</div><div class="symbol">Na</div><div class="details">Sodium<br>22.98976...</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.655); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 0, -2000, 1);"><div class="number">12</div><div class="symbol">Mg</div><div class="details">Magnesium<br>#24.305</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.52); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -2000, 1);"><div class="number">13</div><div class="symbol">Al</div><div class="details">Aluminium<br>26.9815386</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.506); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 0, -2000, 1);"><div class="number">14</div><div class="symbol">Si</div><div class="details">Silicon<br>#28.0855</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.686); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 0, -2000, 1);"><div class="number">15</div><div class="symbol">P</div><div class="details">Phosphorus<br>30.973762</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.56); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -400, -2000, 1);"><div class="number">16</div><div class="symbol">S</div><div class="details">Sulfur<br>#32.065</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.3); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -400, -2000, 1);"><div class="number">17</div><div class="symbol">Cl</div><div class="details">Chlorine<br>#35.453</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.467); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -400, -2000, 1);"><div class="number">18</div><div class="symbol">Ar</div><div class="details">Argon<br>#39.948</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.643); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -400, -2000, 1);"><div class="number">19</div><div class="symbol">K</div><div class="details">Potassium<br>#39.948</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.42); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -400, -2000, 1);"><div class="number">20</div><div class="symbol">Ca</div><div class="details">Calcium<br>#40.078</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.255); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -800, -2000, 1);"><div class="number">21</div><div class="symbol">Sc</div><div class="details">Scandium<br>44.955912</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.647); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -800, -2000, 1);"><div class="number">22</div><div class="symbol">Ti</div><div class="details">Titanium<br>#47.867</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.416); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -800, -2000, 1);"><div class="number">23</div><div class="symbol">V</div><div class="details">Vanadium<br>#50.9415</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.675); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -800, -2000, 1);"><div class="number">24</div><div class="symbol">Cr</div><div class="details">Chromium<br>#51.9961</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.56); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -800, -2000, 1);"><div class="number">25</div><div class="symbol">Mn</div><div class="details">Manganese<br>54.938045</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.427); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 800, -1000, 1);"><div class="number">26</div><div class="symbol">Fe</div><div class="details">Iron<br>#55.845</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.318); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 800, -1000, 1);"><div class="number">27</div><div class="symbol">Co</div><div class="details">Cobalt<br>58.933195</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.25); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 800, -1000, 1);"><div class="number">28</div><div class="symbol">Ni</div><div class="details">Nickel<br>#58.6934</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.49); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 800, -1000, 1);"><div class="number">29</div><div class="symbol">Cu</div><div class="details">Copper<br>#63.546</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.65); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 800, -1000, 1);"><div class="number">30</div><div class="symbol">Zn</div><div class="details">Zinc<br>#65.38</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.667); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 400, -1000, 1);"><div class="number">31</div><div class="symbol">Ga</div><div class="details">Gallium<br>#69.723</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.65); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 400, -1000, 1);"><div class="number">32</div><div class="symbol">Ge</div><div class="details">Germanium<br>#72.63</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.376); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 400, -1000, 1);"><div class="number">33</div><div class="symbol">As</div><div class="details">Arsenic<br>#74.9216</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.33); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 400, -1000, 1);"><div class="number">34</div><div class="symbol">Se</div><div class="details">Selenium<br>#78.96</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.667); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 400, -1000, 1);"><div class="number">35</div><div class="symbol">Br</div><div class="details">Bromine<br>#79.904</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.498); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 0, -1000, 1);"><div class="number">36</div><div class="symbol">Kr</div><div class="details">Krypton<br>#83.798</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.72); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 0, -1000, 1);"><div class="number">37</div><div class="symbol">Rb</div><div class="details">Rubidium<br>#85.4678</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.48); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -1000, 1);"><div class="number">38</div><div class="symbol">Sr</div><div class="details">Strontium<br>#87.62</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.49); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 0, -1000, 1);"><div class="number">39</div><div class="symbol">Y</div><div class="details">Yttrium<br>88.90585</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.56); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 0, -1000, 1);"><div class="number">40</div><div class="symbol">Zr</div><div class="details">Zirconium<br>#91.224</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.69); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -400, -1000, 1);"><div class="number">41</div><div class="symbol">Nb</div><div class="details">Niobium<br>92.90628</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.494); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -400, -1000, 1);"><div class="number">42</div><div class="symbol">Mo</div><div class="details">Molybdenum<br>#95.96</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.545); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -400, -1000, 1);"><div class="number">43</div><div class="symbol">Tc</div><div class="details">Technetium<br>(98)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.467); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -400, -1000, 1);"><div class="number">44</div><div class="symbol">Ru</div><div class="details">Ruthenium<br>#101.07</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.6); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -400, -1000, 1);"><div class="number">45</div><div class="symbol">Rh</div><div class="details">Rhodium<br>#102.9055</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.667); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -800, -1000, 1);"><div class="number">46</div><div class="symbol">Pd</div><div class="details">Palladium<br>#106.42</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.75); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -800, -1000, 1);"><div class="number">47</div><div class="symbol">Ag</div><div class="details">Silver<br>#107.8682</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.7); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -800, -1000, 1);"><div class="number">48</div><div class="symbol">Cd</div><div class="details">Cadmium<br>#112.411</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.35); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -800, -1000, 1);"><div class="number">49</div><div class="symbol">In</div><div class="details">Indium<br>#114.818</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.718); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -800, -1000, 1);"><div class="number">50</div><div class="symbol">Sn</div><div class="details">Tin<br>#118.71</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.537); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 800, 0, 1);"><div class="number">51</div><div class="symbol">Sb</div><div class="details">Antimony<br>#121.76</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.353); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 800, 0, 1);"><div class="number">52</div><div class="symbol">Te</div><div class="details">Tellurium<br>127.6</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.34); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 800, 0, 1);"><div class="number">53</div><div class="symbol">I</div><div class="details">Iodine<br>126.90447</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.58); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 800, 0, 1);"><div class="number">54</div><div class="symbol">Xe</div><div class="details">Xenon<br>#131.293</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.525); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 800, 0, 1);"><div class="number">55</div><div class="symbol">Cs</div><div class="details">Caesium<br>#132.9054</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.596); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 400, 0, 1);"><div class="number">56</div><div class="symbol">Ba</div><div class="details">Barium<br>#132.9054</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.68); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 400, 0, 1);"><div class="number">57</div><div class="symbol">La</div><div class="details">Lanthanum<br>138.90547</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.69); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 400, 0, 1);"><div class="number">58</div><div class="symbol">Ce</div><div class="details">Cerium<br>#140.116</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.616); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 400, 0, 1);"><div class="number">59</div><div class="symbol">Pr</div><div class="details">Praseodymium<br>140.90765</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.44); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 400, 0, 1);"><div class="number">60</div><div class="symbol">Nd</div><div class="details">Neodymium<br>#144.242</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.282); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 0, 0, 1);"><div class="number">61</div><div class="symbol">Pm</div><div class="details">Promethium<br>(145)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.43); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 0, 0, 1);"><div class="number">62</div><div class="symbol">Sm</div><div class="details">Samarium<br>#150.36</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.39); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);"><div class="number">63</div><div class="symbol">Eu</div><div class="details">Europium<br>#151.964</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.667); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 0, 0, 1);"><div class="number">64</div><div class="symbol">Gd</div><div class="details">Gadolinium<br>#157.25</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.43); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 0, 0, 1);"><div class="number">65</div><div class="symbol">Tb</div><div class="details">Terbium<br>158.92535</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.376); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -400, 0, 1);"><div class="number">66</div><div class="symbol">Dy</div><div class="details">Dysprosium<br>162.5</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.64); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -400, 0, 1);"><div class="number">67</div><div class="symbol">Ho</div><div class="details">Holmium<br>164.93032</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.255); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -400, 0, 1);"><div class="number">68</div><div class="symbol">Er</div><div class="details">Erbium<br>#167.259</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.643); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -400, 0, 1);"><div class="number">69</div><div class="symbol">Tm</div><div class="details">Thulium<br>168.93421</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.55); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -400, 0, 1);"><div class="number">70</div><div class="symbol">Yb</div><div class="details">Ytterbium<br>#173.054</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.357); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -800, 0, 1);"><div class="number">71</div><div class="symbol">Lu</div><div class="details">Lutetium<br>#174.9668</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.584); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -800, 0, 1);"><div class="number">72</div><div class="symbol">Hf</div><div class="details">Hafnium<br>#178.49</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.616); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -800, 0, 1);"><div class="number">73</div><div class="symbol">Ta</div><div class="details">Tantalum<br>180.94788</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.365); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -800, 0, 1);"><div class="number">74</div><div class="symbol">W</div><div class="details">Tungsten<br>#183.84</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.38); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -800, 0, 1);"><div class="number">75</div><div class="symbol">Re</div><div class="details">Rhenium<br>#186.207</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.647); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 800, 1000, 1);"><div class="number">76</div><div class="symbol">Os</div><div class="details">Osmium<br>#190.23</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.73); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 800, 1000, 1);"><div class="number">77</div><div class="symbol">Ir</div><div class="details">Iridium<br>#192.217</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.318); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 800, 1000, 1);"><div class="number">78</div><div class="symbol">Pt</div><div class="details">Platinum<br>#195.084</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.608); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 800, 1000, 1);"><div class="number">79</div><div class="symbol">Au</div><div class="details">Gold<br>196.966569</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.275); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 800, 1000, 1);"><div class="number">80</div><div class="symbol">Hg</div><div class="details">Mercury<br>#200.59</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.59); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 400, 1000, 1);"><div class="number">81</div><div class="symbol">Tl</div><div class="details">Thallium<br>#204.3833</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.68); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 400, 1000, 1);"><div class="number">82</div><div class="symbol">Pb</div><div class="details">Lead<br>207.2</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.506); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 400, 1000, 1);"><div class="number">83</div><div class="symbol">Bi</div><div class="details">Bismuth<br>#208.9804</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.48); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 400, 1000, 1);"><div class="number">84</div><div class="symbol">Po</div><div class="details">Polonium<br>(209)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.694); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 400, 1000, 1);"><div class="number">85</div><div class="symbol">At</div><div class="details">Astatine<br>(210)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.573); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 0, 1000, 1);"><div class="number">86</div><div class="symbol">Rn</div><div class="details">Radon<br>(222)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.404); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 0, 1000, 1);"><div class="number">87</div><div class="symbol">Fr</div><div class="details">Francium<br>(223)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.427); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 1000, 1);"><div class="number">88</div><div class="symbol">Ra</div><div class="details">Radium<br>(226)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.675); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 0, 1000, 1);"><div class="number">89</div><div class="symbol">Ac</div><div class="details">Actinium<br>(227)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.353); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 0, 1000, 1);"><div class="number">90</div><div class="symbol">Th</div><div class="details">Thorium<br>232.03806</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.486); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -400, 1000, 1);"><div class="number">91</div><div class="symbol">Pa</div><div class="details">Protactinium<br>#231.0588</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.32); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -400, 1000, 1);"><div class="number">92</div><div class="symbol">U</div><div class="details">Uranium<br>238.02891</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.267); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -400, 1000, 1);"><div class="number">93</div><div class="symbol">Np</div><div class="details">Neptunium<br>(237)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.68); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -400, 1000, 1);"><div class="number">94</div><div class="symbol">Pu</div><div class="details">Plutonium<br>(244)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.467); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -400, 1000, 1);"><div class="number">95</div><div class="symbol">Am</div><div class="details">Americium<br>(243)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.33); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -800, 1000, 1);"><div class="number">96</div><div class="symbol">Cm</div><div class="details">Curium<br>(247)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.447); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -800, 1000, 1);"><div class="number">97</div><div class="symbol">Bk</div><div class="details">Berkelium<br>(247)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.282); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -800, 1000, 1);"><div class="number">98</div><div class="symbol">Cf</div><div class="details">Californium<br>(251)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.25); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, -800, 1000, 1);"><div class="number">99</div><div class="symbol">Es</div><div class="details">Einstenium<br>(252)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.25); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, -800, 1000, 1);"><div class="number">100</div><div class="symbol">Fm</div><div class="details">Fermium<br>(257)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.365); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 800, 2000, 1);"><div class="number">101</div><div class="symbol">Md</div><div class="details">Mendelevium<br>(258)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.5); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 800, 2000, 1);"><div class="number">102</div><div class="symbol">No</div><div class="details">Nobelium<br>(259)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.706); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 800, 2000, 1);"><div class="number">103</div><div class="symbol">Lr</div><div class="details">Lawrencium<br>(262)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.494); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 800, 2000, 1);"><div class="number">104</div><div class="symbol">Rf</div><div class="details">Rutherfordium<br>(267)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.5); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 800, 2000, 1);"><div class="number">105</div><div class="symbol">Db</div><div class="details">Dubnium<br>(268)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.48); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 400, 2000, 1);"><div class="number">106</div><div class="symbol">Sg</div><div class="details">Seaborgium<br>(271)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.635); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 400, 2000, 1);"><div class="number">107</div><div class="symbol">Bh</div><div class="details">Bohrium<br>(272)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.667); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 400, 2000, 1);"><div class="number">108</div><div class="symbol">Hs</div><div class="details">Hassium<br>(270)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.43); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 400, 2000, 1);"><div class="number">109</div><div class="symbol">Mt</div><div class="details">Meitnerium<br>(276)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.424); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 400, 2000, 1);"><div class="number">110</div><div class="symbol">Ds</div><div class="details">Darmstadium<br>(281)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.46); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, 0, 2000, 1);"><div class="number">111</div><div class="symbol">Rg</div><div class="details">Roentgenium<br>(280)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.38); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, 0, 2000, 1);"><div class="number">112</div><div class="symbol">Cn</div><div class="details">Copernicium<br>(285)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.725); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 2000, 1);"><div class="number">113</div><div class="symbol">Uut</div><div class="details">Unutrium<br>(284)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.27); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 400, 0, 2000, 1);"><div class="number">114</div><div class="symbol">Fl</div><div class="details">Flerovium<br>(289)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.596); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 800, 0, 2000, 1);"><div class="number">115</div><div class="symbol">Uup</div><div class="details">Ununpentium<br>(288)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.467); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -800, -400, 2000, 1);"><div class="number">116</div><div class="symbol">Lv</div><div class="details">Livermorium<br>(293)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.698); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -400, -400, 2000, 1);"><div class="number">117</div><div class="symbol">Uus</div><div class="details">Ununseptium<br>(294)</div></div><div class="element" style="background-color: rgba(0, 127, 127, 0.44); position: absolute; transform: translate3d(-50%, -50%, 0px) matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -400, 2000, 1);"><div class="number">118</div><div class="symbol">Uuo</div><div class="details">Ununoctium<br>(294)</div></div></div></div></div>
+		<div id="info">3D-元素周期表</div>
+		<div id="menu">
+			<button id="table">表面</button>
+			<button id="sphere">球体</button>
+			<button id="helix">螺旋</button>
+			<button id="grid">网格</button>
+		</div>
+
+		<script>
+			//这里是定义table元素放入展示的内容,在后面再对table进行解析
+			var table = [
+				"H", "Hydrogenium", "1.00794", 1, 1,
+				"He", "Helium", "4.002602", 18, 1,
+				"Li", "Lithium", "#6.941", 1, 2,
+				"Be", "Beryllium", "9.012182", 2, 2,
+				"B", "Boron", "#10.811", 13, 2,
+				"C", "Carbon", "#12.0107", 14, 2,
+				"N", "Nitrogen", "#14.0067", 15, 2,
+				"O", "Oxygen", "#15.9994", 16, 2,
+				"F", "Fluorine", "18.9984032", 17, 2,
+				"Ne", "Neon", "#20.1797", 18, 2,
+				"Na", "Sodium", "22.98976...", 1, 3,
+				"Mg", "Magnesium", "#24.305", 2, 3,
+				"Al", "Aluminium", "26.9815386", 13, 3,
+				"Si", "Silicon", "#28.0855", 14, 3,
+				"P", "Phosphorus", "30.973762", 15, 3,
+				"S", "Sulfur", "#32.065", 16, 3,
+				"Cl", "Chlorine", "#35.453", 17, 3,
+				"Ar", "Argon", "#39.948", 18, 3,
+				"K", "Potassium", "#39.948", 1, 4,
+				"Ca", "Calcium", "#40.078", 2, 4,
+				"Sc", "Scandium", "44.955912", 3, 4,
+				"Ti", "Titanium", "#47.867", 4, 4,
+				"V", "Vanadium", "#50.9415", 5, 4,
+				"Cr", "Chromium", "#51.9961", 6, 4,
+				"Mn", "Manganese", "54.938045", 7, 4,
+				"Fe", "Iron", "#55.845", 8, 4,
+				"Co", "Cobalt", "58.933195", 9, 4,
+				"Ni", "Nickel", "#58.6934", 10, 4,
+				"Cu", "Copper", "#63.546", 11, 4,
+				"Zn", "Zinc", "#65.38", 12, 4,
+				"Ga", "Gallium", "#69.723", 13, 4,
+				"Ge", "Germanium", "#72.63", 14, 4,
+				"As", "Arsenic", "#74.9216", 15, 4,
+				"Se", "Selenium", "#78.96", 16, 4,
+				"Br", "Bromine", "#79.904", 17, 4,
+				"Kr", "Krypton", "#83.798", 18, 4,
+				"Rb", "Rubidium", "#85.4678", 1, 5,
+				"Sr", "Strontium", "#87.62", 2, 5,
+				"Y", "Yttrium", "88.90585", 3, 5,
+				"Zr", "Zirconium", "#91.224", 4, 5,
+				"Nb", "Niobium", "92.90628", 5, 5,
+				"Mo", "Molybdenum", "#95.96", 6, 5,
+				"Tc", "Technetium", "(98)", 7, 5,
+				"Ru", "Ruthenium", "#101.07", 8, 5,
+				"Rh", "Rhodium", "#102.9055", 9, 5,
+				"Pd", "Palladium", "#106.42", 10, 5,
+				"Ag", "Silver", "#107.8682", 11, 5,
+				"Cd", "Cadmium", "#112.411", 12, 5,
+				"In", "Indium", "#114.818", 13, 5,
+				"Sn", "Tin", "#118.71", 14, 5,
+				"Sb", "Antimony", "#121.76", 15, 5,
+				"Te", "Tellurium", "127.6", 16, 5,
+				"I", "Iodine", "126.90447", 17, 5,
+				"Xe", "Xenon", "#131.293", 18, 5,
+				"Cs", "Caesium", "#132.9054", 1, 6,
+				"Ba", "Barium", "#132.9054", 2, 6,
+				"La", "Lanthanum", "138.90547", 4, 9,
+				"Ce", "Cerium", "#140.116", 5, 9,
+				"Pr", "Praseodymium", "140.90765", 6, 9,
+				"Nd", "Neodymium", "#144.242", 7, 9,
+				"Pm", "Promethium", "(145)", 8, 9,
+				"Sm", "Samarium", "#150.36", 9, 9,
+				"Eu", "Europium", "#151.964", 10, 9,
+				"Gd", "Gadolinium", "#157.25", 11, 9,
+				"Tb", "Terbium", "158.92535", 12, 9,
+				"Dy", "Dysprosium", "162.5", 13, 9,
+				"Ho", "Holmium", "164.93032", 14, 9,
+				"Er", "Erbium", "#167.259", 15, 9,
+				"Tm", "Thulium", "168.93421", 16, 9,
+				"Yb", "Ytterbium", "#173.054", 17, 9,
+				"Lu", "Lutetium", "#174.9668", 18, 9,
+				"Hf", "Hafnium", "#178.49", 4, 6,
+				"Ta", "Tantalum", "180.94788", 5, 6,
+				"W", "Tungsten", "#183.84", 6, 6,
+				"Re", "Rhenium", "#186.207", 7, 6,
+				"Os", "Osmium", "#190.23", 8, 6,
+				"Ir", "Iridium", "#192.217", 9, 6,
+				"Pt", "Platinum", "#195.084", 10, 6,
+				"Au", "Gold", "196.966569", 11, 6,
+				"Hg", "Mercury", "#200.59", 12, 6,
+				"Tl", "Thallium", "#204.3833", 13, 6,
+				"Pb", "Lead", "207.2", 14, 6,
+				"Bi", "Bismuth", "#208.9804", 15, 6,
+				"Po", "Polonium", "(209)", 16, 6,
+				"At", "Astatine", "(210)", 17, 6,
+				"Rn", "Radon", "(222)", 18, 6,
+				"Fr", "Francium", "(223)", 1, 7,
+				"Ra", "Radium", "(226)", 2, 7,
+				"Ac", "Actinium", "(227)", 4, 10,
+				"Th", "Thorium", "232.03806", 5, 10,
+				"Pa", "Protactinium", "#231.0588", 6, 10,
+				"U", "Uranium", "238.02891", 7, 10,
+				"Np", "Neptunium", "(237)", 8, 10,
+				"Pu", "Plutonium", "(244)", 9, 10,
+				"Am", "Americium", "(243)", 10, 10,
+				"Cm", "Curium", "(247)", 11, 10,
+				"Bk", "Berkelium", "(247)", 12, 10,
+				"Cf", "Californium", "(251)", 13, 10,
+				"Es", "Einstenium", "(252)", 14, 10,
+				"Fm", "Fermium", "(257)", 15, 10,
+				"Md", "Mendelevium", "(258)", 16, 10,
+				"No", "Nobelium", "(259)", 17, 10,
+				"Lr", "Lawrencium", "(262)", 18, 10,
+				"Rf", "Rutherfordium", "(267)", 4, 7,
+				"Db", "Dubnium", "(268)", 5, 7,
+				"Sg", "Seaborgium", "(271)", 6, 7,
+				"Bh", "Bohrium", "(272)", 7, 7,
+				"Hs", "Hassium", "(270)", 8, 7,
+				"Mt", "Meitnerium", "(276)", 9, 7,
+				"Ds", "Darmstadium", "(281)", 10, 7,
+				"Rg", "Roentgenium", "(280)", 11, 7,
+				"Cn", "Copernicium", "(285)", 12, 7,
+				"Uut", "Unutrium", "(284)", 13, 7,
+				"Fl", "Flerovium", "(289)", 14, 7,
+				"Uup", "Ununpentium", "(288)", 15, 7,
+				"Lv", "Livermorium", "(293)", 16, 7,
+				"Uus", "Ununseptium", "(294)", 17, 7,
+				"Uuo", "Ununoctium", "(294)", 18, 7
+			];
+
+			var camera, scene, renderer;
+			var controls;
+
+			var objects = [];
+			var targets = {
+				table: [],
+				sphere: [],
+				helix: [],
+				grid: []
+			};
+
+			init();
+			animate();
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+				//透视投影相机,PerspectiveCamera(fov, aspect, near, far) 
+				// - fov 可视角度 
+				// - aspect 为width/height,通常设置为canvas元素的高宽比。 
+				// - near近端距离 
+				// - far远端距离 
+				//只有离相机的距离大于near值，小于far值，且在相机的可视角度之内，才能被相机投影到。
+
+				camera.position.z = 3000;
+				//3000是camera的竖直高度,可以理解为值越大可见度越大
+
+				scene = new THREE.Scene();
+
+
+				// table 表格
+				//这里是对table表格里的数据进行解析,然后分配到每个div中构成模块
+				for (var i = 0; i < table.length; i += 5) {
+
+					var element = document.createElement('div');
+					element.className = 'element';
+					element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+					var number = document.createElement('div');
+					number.className = 'number';
+					number.textContent = (i / 5) + 1;
+					element.appendChild(number);
+
+					var symbol = document.createElement('div');
+					symbol.className = 'symbol';
+					symbol.textContent = table[i];
+					element.appendChild(symbol);
+
+					var details = document.createElement('div');
+					details.className = 'details';
+					details.innerHTML = table[i + 1] + '<br>' + table[i + 2];
+					element.appendChild(details);
+
+					var object = new THREE.CSS3DObject(element);
+					object.position.x = Math.random() * 4000 - 2000;
+					object.position.y = Math.random() * 4000 - 2000;
+					object.position.z = Math.random() * 4000 - 2000;
+					scene.add(object);
+
+					objects.push(object);
+
+
+
+					var object = new THREE.Object3D();
+					object.position.x = (table[i + 3] * 140) - 1330;
+					object.position.y = -(table[i + 4] * 180) + 990;
+
+					targets.table.push(object);
+
+				}
+
+				// sphere 球
+
+				var vector = new THREE.Vector3();
+
+				for (var i = 0, l = objects.length; i < l; i++) {
+
+					var phi = Math.acos(-1 + (2 * i) / l);
+					var theta = Math.sqrt(l * Math.PI) * phi;
+
+					var object = new THREE.Object3D();
+
+					object.position.x = 800 * Math.cos(theta) * Math.sin(phi);
+					object.position.y = 800 * Math.sin(theta) * Math.sin(phi);
+					object.position.z = 800 * Math.cos(phi);
+
+					vector.copy(object.position).multiplyScalar(2);
+
+					object.lookAt(vector);
+
+					targets.sphere.push(object);
+
+				}
+
+				// helix 螺旋
+
+				var vector = new THREE.Vector3();
+
+				for (var i = 0, l = objects.length; i < l; i++) {
+
+					var phi = i * 0.175 + Math.PI;
+
+					var object = new THREE.Object3D();
+
+					object.position.x = 900 * Math.sin(phi);
+					object.position.y = -(i * 8) + 450;
+					object.position.z = 900 * Math.cos(phi);
+
+					vector.x = object.position.x * 2;
+					vector.y = object.position.y;
+					vector.z = object.position.z * 2;
+
+					object.lookAt(vector);
+
+					targets.helix.push(object);
+
+				}
+
+				// grid 网格
+
+				for (var i = 0; i < objects.length; i++) {
+
+					var object = new THREE.Object3D();
+
+					object.position.x = ((i % 5) * 400) - 800;
+					object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 800;
+					object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+
+					targets.grid.push(object);
+
+				}
+
+				//
+
+				renderer = new THREE.CSS3DRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.domElement.style.position = 'absolute';
+				document.getElementById('container').appendChild(renderer.domElement);
+
+				//
+
+				controls = new THREE.TrackballControls(camera, renderer.domElement);
+				controls.rotateSpeed = 0.5; //旋转速度
+				controls.minDistance = 500; //最小距离
+				controls.maxDistance = 10000; //最大距离
+				controls.addEventListener('change', render);
+
+				var button = document.getElementById('table');
+				button.addEventListener('click', function(event) {
+
+					transform(targets.table, 2000); //展示表格
+
+				}, false);
+
+				var button = document.getElementById('sphere');
+				button.addEventListener('click', function(event) {
+
+					transform(targets.sphere, 2000); //展示球
+
+				}, false);
+
+				var button = document.getElementById('helix');
+				button.addEventListener('click', function(event) {
+
+					transform(targets.helix, 2000); //展示螺旋
+
+				}, false);
+
+				var button = document.getElementById('grid');
+				button.addEventListener('click', function(event) {
+
+					transform(targets.grid, 2000); //展示网格
+
+				}, false);
+
+				transform(targets.table, 5000);
+
+				//
+
+				window.addEventListener('resize', onWindowResize, false);
+
+			}
+
+
+			function transform(targets, duration) {
+				//targets对象,duration持续时间
+
+				TWEEN.removeAll();
+
+				for (var i = 0; i < objects.length; i++) {
+
+					var object = objects[i];
+					var target = targets[i];
+
+					new TWEEN.Tween(object.position)
+						.to({
+							x: target.position.x,
+							y: target.position.y,
+							z: target.position.z
+						}, Math.random() * duration + duration)
+						.easing(TWEEN.Easing.Exponential.InOut)
+						.start();
+
+					new TWEEN.Tween(object.rotation)
+						.to({
+							x: target.rotation.x,
+							y: target.rotation.y,
+							z: target.rotation.z
+						}, Math.random() * duration + duration)
+						.easing(TWEEN.Easing.Exponential.InOut)
+						.start();
+
+				}
+
+				new TWEEN.Tween(this)
+					.to({}, duration * 2)
+					.onUpdate(render)
+					.start();
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize(window.innerWidth, window.innerHeight);
+
+				render();
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame(animate);
+
+				TWEEN.update();
+
+				controls.update();
+
+			}
+
+			function render() {
+
+				renderer.render(scene, camera);
+
+			}
+		</script>
+	
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
